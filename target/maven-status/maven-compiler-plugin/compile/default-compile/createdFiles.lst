@@ -1,0 +1,15 @@
+com\walcompany\connectors\Connector.class
+com\walcompany\repositories\jdbc\CursoRepository.class
+com\walcompany\repositories\jdbc\InscripcionRepository.class
+com\walcompany\enums\Turno.class
+com\walcompany\repositories\interfaces\I_CursoRepository.class
+com\walcompany\repositories\jdbc\AlumnoRepository.class
+com\walcompany\Utils\TableHtml.class
+com\walcompany\entities\Curso.class
+com\walcompany\repositories\interfaces\I_InscripcionRepository.class
+com\walcompany\tests\TestRepository.class
+com\walcompany\tests\TestConnector.class
+com\walcompany\entities\Alumno.class
+com\walcompany\repositories\interfaces\I_AlumnoRepository.class
+com\walcompany\entities\Inscripcion.class
+com\walcompany\enums\Dia.class

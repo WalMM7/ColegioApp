@@ -1,0 +1,15 @@
+C:\Users\Walter\Documents\4-CURSOS\1-CURSOS PROGRAMACION\JavaStandarWebP_2020\ProyectosNetBeans\ColegioApp\src\main\java\com\walcompany\repositories\interfaces\I_AlumnoRepository.java
+C:\Users\Walter\Documents\4-CURSOS\1-CURSOS PROGRAMACION\JavaStandarWebP_2020\ProyectosNetBeans\ColegioApp\src\main\java\com\walcompany\entities\Curso.java
+C:\Users\Walter\Documents\4-CURSOS\1-CURSOS PROGRAMACION\JavaStandarWebP_2020\ProyectosNetBeans\ColegioApp\src\main\java\com\walcompany\enums\Dia.java
+C:\Users\Walter\Documents\4-CURSOS\1-CURSOS PROGRAMACION\JavaStandarWebP_2020\ProyectosNetBeans\ColegioApp\src\main\java\com\walcompany\entities\Alumno.java
+C:\Users\Walter\Documents\4-CURSOS\1-CURSOS PROGRAMACION\JavaStandarWebP_2020\ProyectosNetBeans\ColegioApp\src\main\java\com\walcompany\entities\Inscripcion.java
+C:\Users\Walter\Documents\4-CURSOS\1-CURSOS PROGRAMACION\JavaStandarWebP_2020\ProyectosNetBeans\ColegioApp\src\main\java\com\walcompany\Utils\TableHtml.java
+C:\Users\Walter\Documents\4-CURSOS\1-CURSOS PROGRAMACION\JavaStandarWebP_2020\ProyectosNetBeans\ColegioApp\src\main\java\com\walcompany\repositories\interfaces\I_CursoRepository.java
+C:\Users\Walter\Documents\4-CURSOS\1-CURSOS PROGRAMACION\JavaStandarWebP_2020\ProyectosNetBeans\ColegioApp\src\main\java\com\walcompany\repositories\interfaces\I_InscripcionRepository.java
+C:\Users\Walter\Documents\4-CURSOS\1-CURSOS PROGRAMACION\JavaStandarWebP_2020\ProyectosNetBeans\ColegioApp\src\main\java\com\walcompany\enums\Turno.java
+C:\Users\Walter\Documents\4-CURSOS\1-CURSOS PROGRAMACION\JavaStandarWebP_2020\ProyectosNetBeans\ColegioApp\src\main\java\com\walcompany\repositories\jdbc\CursoRepository.java
+C:\Users\Walter\Documents\4-CURSOS\1-CURSOS PROGRAMACION\JavaStandarWebP_2020\ProyectosNetBeans\ColegioApp\src\main\java\com\walcompany\tests\TestRepository.java
+C:\Users\Walter\Documents\4-CURSOS\1-CURSOS PROGRAMACION\JavaStandarWebP_2020\ProyectosNetBeans\ColegioApp\src\main\java\com\walcompany\repositories\jdbc\InscripcionRepository.java
+C:\Users\Walter\Documents\4-CURSOS\1-CURSOS PROGRAMACION\JavaStandarWebP_2020\ProyectosNetBeans\ColegioApp\src\main\java\com\walcompany\tests\TestConnector.java
+C:\Users\Walter\Documents\4-CURSOS\1-CURSOS PROGRAMACION\JavaStandarWebP_2020\ProyectosNetBeans\ColegioApp\src\main\java\com\walcompany\repositories\jdbc\AlumnoRepository.java
+C:\Users\Walter\Documents\4-CURSOS\1-CURSOS PROGRAMACION\JavaStandarWebP_2020\ProyectosNetBeans\ColegioApp\src\main\java\com\walcompany\connectors\Connector.java

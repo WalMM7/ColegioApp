@@ -1,0 +1,468 @@
+/*BODY*/
+body{
+    background-color:whitesmoke;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.15em;
+    font-weight: 400;
+    margin: 0;
+    padding-bottom: 50px;
+}
+#d_cuerpo{
+    margin-left: 3%;
+    margin-right: 3%;
+}
+/*TITULO PRINCIPAL*/
+#d_h1{
+    background-color:#454545;
+    width:100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin:70px auto 40px auto;;
+}
+#tituloPrin{
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.4em;
+}
+/*LABELS & IMPUTS*/
+label{
+    display: inline-block;
+    width: 180px;
+}
+.l_vertical{
+    width: 180px;
+    display: block;
+}
+input{
+    height: 25px;
+    width: 200px;
+}
+.i_resetear{
+    width: 95px;
+    height: 30px;
+    margin: 25px 0 0 0px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.9em;    
+}
+.i_enviar{
+    width: 105px;
+    height: 30px;
+    margin-top: 25px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.9em;
+}
+#i_bot_guardar{
+    margin-left: 23%;
+}
+#i_bot_busTP,#i_bot_bus{
+    margin-left: 22.5%;
+}
+#i_buscarNom,#i_buscarApe,#i_buscarTitulo,#i_buscarProfesor{
+    width: 220px;
+}
+#i_buscarDni,#i_buscarIdAlum,#i_buscarIdCur,#i_buscarAño,#i_buscarIdReg,#i_idAl{
+    width: 115px;
+}
+#i_edad{
+    width: 85px;
+}
+#i_codAre{
+    width: 85px;
+}
+#i_numTel{
+    width: 160px;
+}
+#s_dia,#s_turno{
+    width: 150px;
+    height: 31px;
+}
+#s_curso,#s_alumno,#s_reg{
+    height: 31px;
+    width:auto;
+}
+#s_año{
+    width: 123px;
+    height: 31px;    
+}
+#i_codAre{
+    width: 85px;
+}
+
+/*NAV & DIV MENU*/
+#n_menu{
+    font-family: 'Roboto', sans-serif;
+}
+#d_menu{
+    background-color: lightslategrey;
+    border-radius: 5px;
+    width: 91.5%;
+    height: 45px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.a_menu{
+    text-decoration: none;
+    color: white;
+}
+.a_menu:hover{
+    color: lightgreen;
+}
+#a_alta,#a_baja,#a_actualizar,#a_buscar,#a_tablita{
+    padding: 3px;
+    display: inline-block;
+}
+#d_menu_restart{
+    background-color: whitesmoke;
+    width: 6.5%;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+#a_restart{
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*SUBTITULOS*/
+.d_combo{
+    width: 91.5%;
+    height: 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items: center;
+}
+#d_subTitulo{
+    background-color: lightslategrey;
+    border-radius: 5px;
+    width: 89%;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.17em;
+    font-weight: 400;
+    color: white;
+} 
+.d_vol{
+   border: 2px lightslategrey solid;
+   border-radius: 5px;
+   width:6%;
+   height: 33px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+#foot_vol_final{
+    width: 91.5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 45px;
+    
+}
+#a_volIc{
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/*FORMS: guardar, buscar, actulizar y eleiminar*/
+.d_form{
+    margin: 5px 0;
+}
+#f_guardar{
+    padding: 10px;
+    margin-right: 0%;
+    margin-top: 35px;      
+}
+#d_f_bus{
+    width: 64.15%;
+    margin-top: 35px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; 
+}
+#d_f_bus_1{
+    width: 82%;
+    margin-top: 35px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; 
+}
+#d_bus_input{
+    margin-bottom:86px;
+}
+#d_bus_input2{
+    margin-bottom:147px;
+}
+.d_bus_bot{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 25px;
+    width: 228px;
+}
+#f_act{
+    margin-top: 35px;
+    padding: 10px;
+}
+#f_elim{
+    margin-top: 35px;
+    padding: 10px;
+}
+#d_tel{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    width:27%;
+    margin-left: 185px;
+}
+#d_idAlum,#d_reg{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    width:39.2%;
+    margin-left: 185px;
+}
+
+/*MENSAJES*/
+.d_msj{
+    height: 30px;
+    width: 74%;
+    padding: 2px;
+    border-radius: 10px;
+    margin: 15px 0 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+}   
+#exitoso{
+    background-color: lightgreen;
+   }
+#error_1{
+    background-color: #F62817;
+    color: white;
+}
+#alerta_1{
+    background-color: #E1BEE7;
+}
+#error_2{
+    background-color: yellow;
+}
+p.p_smsj{
+    font-size: 0.8em;
+    font-style: italic;
+    color: white;
+}
+h4{
+    font-weight: 400;
+}
+.d_subMsj{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 22px;
+    width: 12%;
+    background-color: #f44336;
+    border-radius: 5px;
+}
+
+/*TABLA*/
+.d_table{
+    margin: 50px 0 40px 0;
+}
+table{
+    border-collapse:collapse;
+    padding: 5px;
+    margin-left: 0;
+}
+caption{
+    background-color:#566D7E;
+    height: 30px;
+    padding: 3px;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    border: 2px white solid;
+    font-size:1.20em;
+    font-weight: 300;
+}
+th{
+    border: 2px white solid;
+    background-color:#737CA1;
+    padding: 5px;
+    color: white;
+    font-weight: 400;
+}
+/*Ancho columnas Tabla 1:curso*/
+#table_1 th:first-child{
+    width: 80px;
+}
+#table_1 th:nth-child(2){
+    width: 280px;
+}
+#table_1 th:nth-child(3){
+    width: 280px;
+}
+#table_1 th:nth-child(4){
+    width: 100px;
+}
+#table_1 th:nth-child(5){
+    width: 100px;
+}
+#table_1 th:nth-child(6){
+    width: 80px;
+}
+#table_1 th:nth-child(7){
+    width: 80px;
+}
+/*Ancho columnas Tabla 2:alumno*/
+#table_2 th:first-child{
+    width: 80px;
+}
+#table_2 th:nth-child(2){
+    width: 260px;
+}
+#table_2 th:nth-child(3){
+    width: 240px;
+}
+#table_2 th:nth-child(4){
+    width: 80px;
+}
+#table_2 th:nth-child(5){
+    width: 150px;
+}
+#table_2 th:nth-child(6){
+    width: 200px;
+}
+/*Ancho colum tabla 3:inscripcion simplificada*/
+#table_3 th:first-child{
+    width: 80px;
+}
+#table_3 th:nth-child(2){
+    width: 150px;
+}
+#table_3 th:nth-child(3){
+    width: 150px;
+}
+#table_3 th:nth-child(4){
+    width: 150px;
+}
+
+td{
+    background-color:rgb(204, 209, 214);
+    border: 2px white solid;
+    padding: 5px;
+    text-align: left;
+}
+
+/*SEPARADOR*/
+.d_separador{
+    width: auto;
+    height: 50px;
+    border:2px solid whitesmoke;
+}
+    
+/*BARRA HORIZONTAL DE INICIO*/
+ul{
+    list-style-type: none;
+    background-color:#000000;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    position: fixed;
+    top:0;
+    left: 0;
+    font-family: 'Roboto', sans-serif;
+    z-index: 2;
+}
+li {
+    float: left;
+}
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+li a:hover {
+    color: lightgreen;
+}
+.active {
+    background-color: #4CAF50;
+}
+
+/* FOTOS */
+#f_entrada,#f_aerea{
+    width:auto;
+    height:320px;
+}
+#d_fotos{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 35px;
+}
+
+/*ICONOS*/
+#ic_ok,#ic_aviso,#ic_cancel,#ic_completar{
+    color:white;
+    font-size: 1.6em;
+    -webkit-text-stroke: 1.5px black;
+    position: absolute;
+    left:6.5%;
+    z-index: 1;
+}
+#ic_volver,#ic_restart{
+    color:darkblue;
+    font-weight: bold;
+    font-size: 1.7em;
+    z-index: 1;
+}
+#ic_volver:hover,#ic_restart:hover{
+    color: lightgreen;
+}
+
+/*Pagina index*/
+
+#d_cuerpo_index{
+   padding:20px;
+   margin-top:20px;
+   height:100%;
+}
+
+.d_subTitulo_index{
+    background-color: lightslategrey;
+    border-radius: 5px;
+    width:30%;
+    height: 35px;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.17em;
+    font-weight: 400;
+    color: white;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.d_texto{
+    padding: 20px;
+}
+.p_texto{
+    text-align: justify;
+    margin: 10px;
+}
