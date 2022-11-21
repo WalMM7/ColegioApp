@@ -48,3 +48,4 @@ inner join cursos as c
 on i.idCurso = c.idcurso
 order by i.idReg;
 
+select*from cursos;

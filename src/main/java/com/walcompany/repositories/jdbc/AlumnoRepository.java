@@ -103,7 +103,7 @@ public class AlumnoRepository implements I_AlumnoRepository {
             ps.setString(4,alumno.getDni());
             ps.setString(5,alumno.getTelefono());
             ps.execute();
-            ResultSet rs=ps.getGeneratedKeys();
+            ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
                 alumno.setIdalum(rs.getInt(1));
             }

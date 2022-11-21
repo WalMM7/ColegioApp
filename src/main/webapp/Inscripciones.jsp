@@ -4,6 +4,7 @@
     Author     : Walter
 --%>
 
+<%@page import="com.walcompany.Utils.RegExp"%>
 <%@page import="java.text.DecimalFormat"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
@@ -28,31 +29,9 @@
     I_CursoRepository cr = new CursoRepository(Connector.getConexion());
     
     LocalDate fecha= LocalDate.now();
-    int añoCero=2015;
-    int añoActual= fecha.getYear();
-    
-    int x=0,y=0,w=0,z=0,q=0,idCu2,añoInt,y1=0,y2=0,idObjetivo;
-
-    String[] msj={"","","",""};
-    //msj[0]=idAl,[1]=idCu,[2]=año,[3]=alumno inexistente
-    String exRAlf = 
-            "^[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,15}$|"
-            + "^[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,15}(\\s)[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,15}$|"
-            + "^[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,15}(\\s)[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,15}(\\s)[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,15}$|"
-            +"^[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,13}(\\s)[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,13}(\\s)[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,13}(\\s)[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,13}$";
-    Pattern patAlf = Pattern.compile(exRAlf);
-    
-    String exRCarac="[^(àèìòù`~|}{\\[\\]^_¡¬)]*";
-    Pattern patCarac = Pattern.compile(exRCarac);
-     
-    String exRNum = "^[1-9]{1}\\d*$";
-    Pattern patNum = Pattern.compile(exRNum);
-    
-    String exRAño = "^[2]{1}\\d{3}$";
-    Pattern patAño = Pattern.compile(exRAño);
-    
-    String exRDni = "^[^0][0-9]{6,7}";
-    Pattern patDni = Pattern.compile(exRDni);
+    int x=0,tit2=0,dni2=0,idCur2,año2,idObj,añoCero=2015,añoActual= fecha.getYear();
+    int[]valores;
+    List<String>msjss= new ArrayList();
  
 %>
 <!DOCTYPE html>
@@ -103,53 +82,29 @@
                 try {
                     String idAlM = request.getParameter("idAlManual");
                     String idAlA = request.getParameter("idAlAuto");
-                    String idCurso = request.getParameter("idCurso");
+                    String idCur = request.getParameter("idCurso");
                     String año = request.getParameter("año");
                                                                         
-                    if (idAlM!=null&&idAlA!=null&&idCurso!=null&&año!=null) {
-           
-                        if (!idAlM.isBlank()&&idAlA.isEmpty()) {
-                      
-                            Matcher mIdAl= patNum.matcher(idAlM);
-                            if (mIdAl.matches()) {
-                                idObjetivo = Integer.parseInt(idAlM);
-                                Alumno a = ar.getById(idObjetivo);
-                                if (a.getIdalum()==0) {w=1;msj[3]="Alumno inexistente";}
-                            }else{w=1;idObjetivo=0;msj[0]="Id alumno";}
-                        }else if (!idAlA.isBlank()&&idAlM.isEmpty()) {
-                       
-                            Matcher mIdAl= patNum.matcher(idAlA);
-                            if (mIdAl.matches()) {
-                                idObjetivo = Integer.parseInt(idAlA);
-                            }else{w=1;idObjetivo=0;msj[0]="Lista alumnos";}
-                        }else{w=1;idObjetivo=0;msj[0]="Alumno: id / lista";}
-                      
-                        Matcher mIdCu= patNum.matcher(idCurso);
-                            if (mIdCu.matches()) {
-                                idCu2 = Integer.parseInt(idCurso);
-                            }else{z=1;idCu2=0;msj[1]="Curso";}
-
-                        Matcher mAño= patAño.matcher(año);
-                            if (mAño.matches()) {
-                                añoInt = Integer.parseInt(año);
-                            }else{q=1;añoInt=0;msj[2]="Año";}
-    
-                        Inscripcion inscripcion = new Inscripcion(idObjetivo,idCu2,añoInt);
-
-                        for(Inscripcion i:ir.getAll()){
-                            if (inscripcion.equals(i)) {x=1;}
-                        }
-                      
+                    if (idAlM!=null&&idAlA!=null&&idCur!=null&&año!=null) {
+                        
+                        idObj= new RegExp().validateNumero(idAlM,idAlA);
+                        idCur2= new RegExp().validateNumero(idCur);
+                        año2= new RegExp().validateAño(año);
+                        Inscripcion inscripcion = new Inscripcion(idObj,idCur2,año2);
+                        msjss.addAll(new RegExp().validateInscripcion(inscripcion));
+                        for(String ms:msjss){if (!ms.isEmpty()){x=-1;}};
                         //Guardar
-                        if (x==0 && w==0 && z==0 && q==0) {ir.save(inscripcion);}
+                        if (x==0) {ir.save(inscripcion);}
                         if (inscripcion.getIdReg()!=0) {
-                            out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Se ha INSCRIPTO el alumno id= "+inscripcion.getIdAlum()+" al curso id= "+inscripcion.getIdCurso()+"</h4></div>");
-                        }else if(x==1){
-                            out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>El alumno ya esta inscripto a ese curso</h4></div>");
-                        }else if(w==1 ||z==1 ||q==1){
-                            out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Campos completados incorrectamente</h4></div>");
-                            for (int j = 0; j < msj.length; j++) {
-                                if (!msj[j].isEmpty()) {out.println("<div class='d_subMsj'><p class='p_smsj'>"+msj[j]+"</p></div>");}
+                            out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Se ha INSCRIPTO EXITOSAMENTE el alumno (id= "+inscripcion.getIdAlum()+") al curso (id= "+inscripcion.getIdCurso()+")</h4></div>");
+                        }else if(x==-1){
+                            if (msjss.contains("El alumno ya esta inscripto a ese curso")) {
+                                    out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>"+msjss.get(0)+"</h4></div>");
+                            }else{
+                                out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Campos completados incorrectamente</h4></div>");
+                                for (int j = 0; j < msjss.size(); j++) {
+                                    if (!msjss.get(j).isEmpty()) {out.println("<div class='d_subMsj'><p class='p_smsj'>"+msjss.get(j)+"</p></div>");}
+                                }
                             }
                         }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ocurrio un error en la BD</h4></div>");}
                     }else{out.println("<div class='d_msj' id='alerta_1'><span class='material-symbols-outlined' id='ic_completar'>edit_document</span><h4>Se requiere completar los campos para efectuar una inscripción</h4></div>");}
@@ -219,32 +174,16 @@
                 try {
                     String elimRegM = request.getParameter("elimRegManual");
                     String elimRegA = request.getParameter("elimRegAutomatico");
-                    
+                                      
                     if (elimRegM!=null&&elimRegA!=null) {
-                        if (!elimRegM.isBlank()&&elimRegA.isEmpty()) {
-                            Matcher mER= patNum.matcher(elimRegM);
-                            if (mER.matches()) {
-                                idObjetivo = Integer.parseInt(elimRegM);
-                            }else{z=1;idObjetivo=0;}
-                        }else if(!elimRegA.isBlank()&&elimRegM.isEmpty()) {
-                            Matcher mER= patNum.matcher(elimRegA);
-                            if (mER.matches()) {
-                                idObjetivo = Integer.parseInt(elimRegA);
-                            }else{z=1;idObjetivo=0;}
-                        }else{z=1;idObjetivo=0;}
-                
-                        Inscripcion insc = ir.getByIdReg(idObjetivo);
-
-                        if (insc.getIdReg()!=0) {
-                            ir.remove(insc);
-                            out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Se ha ELIMINADO el Registro con id= "+insc.getIdReg()+"</h4></div>");
-                        }else if(elimRegM.equals("0")||elimRegA.equals("0")){
-                            out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>No es valido el id registro = 0</h4></div>");
-                        }else if(z==1){
-                            out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ingrese caracteres numéricos</h4></div>");
-                        }else{
-                            out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>No existe en la BD el registro con id = "+idObjetivo+"</h4></div>");
-                        }   
+                        idObj= new RegExp().validateNumero(elimRegM,elimRegA);
+                        Inscripcion inscripcion = ir.getByIdReg(idObj);
+                        if (idObj>0) {
+                            if (inscripcion.getIdReg()!=0) {
+                                ir.remove(inscripcion);
+                                out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>"+new RegExp().msjsElimReg(idObj, inscripcion)+"</h4></div>");
+                            }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>"+new RegExp().msjsElimReg(idObj, inscripcion)+"</h4></div>");}
+                        }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>"+new RegExp().msjsElimReg(idObj, inscripcion)+"</h4></div>");}
                     }else{out.println("<div class='d_msj' id='alerta_1'><span class='material-symbols-outlined' id='ic_completar'>edit_document</span><h4>Se requiere seleccionar un registro para su eliminación</h4></div>");}
                 } catch (Exception e) {out.println("<div class='d_msj' id='error_2'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ocurrió un error inesperado</h4></div>");}
             %>
@@ -399,38 +338,22 @@
 
                     if (ir.getAll().size()!=0) {
                         if (busIdR==null||busIdR.isBlank()) {
-
                             if ((busPro==null||busPro.isBlank())&&(busTitP==null||busTitP.isBlank())
                                 &&(busAñoP==null||busAñoP.isBlank())) {
-
                                 if  ((busNom==null||busNom.isBlank())&&(busApe==null||busApe.isBlank())
                                     &&(busIdC==null||busIdC.isBlank())){
-
                                     if ((busDni==null||busDni.isBlank())&&(busTit==null||busTit.isBlank())
                                        &&(busAño==null||busAño.isBlank())) {
-
                                         out.println("<div class='d_msj' id='alerta_1'><span class='material-symbols-outlined' id='ic_completar'>edit_document</span><h4>Se requiere completar cuaquiera de los campos para hacer una busqueda</h4></div>");
                                         out.println("<div class='d_table'>"+new TableHtml().getTableInnerJM(ir.getAllInnerJM())+"</div>");
                                     }else if(busDni!=null&&busTit!=null&&busAño!=null){ 
-
-                                        Matcher mDni= patDni.matcher(busDni);
-                                            if (!mDni.matches()) {z=1;}
-
-                                        Matcher mTit1= patAlf.matcher(busTit);
-                                        Matcher mTit2= patCarac.matcher(busTit);
-                                            if (!mTit1.matches()) {y=1;
-                                            }else{if (!mTit2.matches()) {y=1;}}
-
-                                        Matcher mAño= patAño.matcher(busAño);
-                                            if (mAño.matches()) {
-                                                añoInt = Integer.parseInt(busAño);
-                                            }else{q=1;añoInt=0;}
-
+                                        dni2= new RegExp().validateDniSf(busDni);
+                                        tit2= new RegExp().validateText(busTit);
+                                        año2= new RegExp().validateAño(busAño);
                                         if(!busDni.isBlank()&&busTit.isEmpty()&&busAño.isEmpty()){
                                             //idDni
                                             Inscripcion i1=ir.getByDni(busDni);
-
-                                            if (z==0) {
+                                            if (dni2==0) {
                                                 if (i1.getIdReg()!=0) {
                                                     out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas (id)</h4></div>");
                                                     out.println("<div class='d_table'>"+new TableHtml().getTable(i1)+"</div>");
@@ -441,7 +364,7 @@
                                             //Titulo
                                             li.addAll(ir.getLikeTit(busTit));
 
-                                            if (y==0) {
+                                            if (tit2==0) {
                                                 if(li.size()!=0){
                                                     out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
                                                     out.println("<div class='d_table'>"+new TableHtml().getTableInnerJM(li)+"</div>");
@@ -450,9 +373,9 @@
                                         }
                                         if(busDni.isEmpty()&&busTit.isEmpty()&&!busAño.isBlank()){
                                             //Año
-                                            li.addAll(ir.getByAño(añoInt));
+                                            li.addAll(ir.getByAño(año2));
 
-                                            if (q==0) {
+                                            if (año2!=-1) {
                                                 if (li.size()!=0) {
                                                     out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas (id)</h4></div>");
                                                     out.println("<div class='d_table'>"+new TableHtml().getTableInnerJM(li)+"</div>");
@@ -463,7 +386,7 @@
                                             //dni y tit
                                             li.addAll(ir.getLikeDniTit(busDni,busTit));
 
-                                            if (y==0 && z==0) {
+                                            if (dni2==0 && tit2==0) {
                                                 if(li.size()!=0){
                                                     out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
                                                     out.println("<div class='d_table'>"+new TableHtml().getTableInnerJM(li)+"</div>");
@@ -472,9 +395,9 @@
                                         }
                                         if(!busDni.isBlank()&&busTit.isEmpty()&&!busAño.isBlank()){
                                             //dni y año
-                                            li.addAll(ir.getLikeDniAño(busDni,añoInt));
+                                            li.addAll(ir.getLikeDniAño(busDni,año2));
 
-                                            if (z==0 && q==0) {
+                                            if (dni2==0 && año2!=-1) {
                                                 if(li.size()!=0){
                                                     out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
                                                     out.println("<div class='d_table'>"+new TableHtml().getTableInnerJM(li)+"</div>");
@@ -483,9 +406,9 @@
                                         }
                                         if(!busTit.isBlank()&&!busAño.isBlank()){
                                             //titulo y año
-                                            li.addAll(ir.getLikeTitAño(busTit,añoInt));
+                                            li.addAll(ir.getLikeTitAño(busTit,año2));
 
-                                            if (y==0 && q==0) {
+                                            if (tit2==0 && año2!=-1) {
                                                 if(li.size()!=0){
                                                     out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
                                                     out.println("<div class='d_table'>"+new TableHtml().getTableInnerJM(li)+"</div>");
@@ -494,9 +417,9 @@
                                         }
                                         if(!busDni.isBlank()&&!busTit.isBlank()&&!busAño.isBlank()){
                                             //dni, titulo y año
-                                            li.addAll(ir.getLikeDniTitAño(busDni,busTit,añoInt));
+                                            li.addAll(ir.getLikeDniTitAño(busDni,busTit,año2));
 
-                                            if (z==0 && y==0 && q==0) {
+                                            if (dni2==0 && tit2==0 && año2!=-1) {
                                                 if(li.size()!=0){
                                                     out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
                                                     out.println("<div class='d_table'>"+new TableHtml().getTableInnerJM(li)+"</div>");
@@ -505,27 +428,13 @@
                                         }
                                     }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Algo ha salido mal en la busqueda de 'dni, titulo y año'</h4></div>");}
                                 }else if(busNom!=null&&busApe!=null&&busIdC!=null){ 
-
-                                    Matcher mNom1= patAlf.matcher(busNom);
-                                    Matcher mNom2= patCarac.matcher(busNom);
-                                    if (!mNom1.matches()) {y1=1;
-                                    }else{if (!mNom2.matches()) {y1=1;}}
-
-                                    Matcher mApe1= patAlf.matcher(busApe);
-                                    Matcher mApe2= patCarac.matcher(busApe);
-                                    if (!mApe1.matches()) {y2=1;
-                                    }else{if (!mApe2.matches()) {y2=1;}}
-
-                                    Matcher mId= patNum.matcher(busIdC);
-                                    if (mId.matches()) {
-                                        idObjetivo = Integer.parseInt(busIdC);
-                                    }else{w=1;idObjetivo=0;}
-
+                                    valores= new RegExp().validateText(busNom,busApe);
+                                    idObj= new RegExp().validateNumero(busIdC);
                                     if(busNom.isEmpty()&&!busApe.isBlank()&&busIdC.isEmpty()){
                                         // apellido
                                         li.addAll(ir.getLikeNomApe(busNom,busApe));
 
-                                        if (y==0) {
+                                        if (valores[1]==0) {
                                             if(li.size()!=0){
                                                 out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
                                                 out.println("<div class='d_table'>"+new TableHtml().getTableInnerJM(li)+"</div>");
@@ -536,7 +445,7 @@
                                         //Nombre y apellido
                                         li.addAll(ir.getLikeNomApe(busNom,busApe));
 
-                                        if (y==0) {
+                                        if (valores[0]==0&&valores[1]==0) {
                                             if(li.size()!=0){
                                                 out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
                                                 out.println("<div class='d_table'>"+new TableHtml().getTableInnerJM(li)+"</div>");
@@ -545,20 +454,29 @@
                                     }
                                     if((!busNom.isBlank()||busNom.isEmpty())&&!busApe.isBlank()&&!busIdC.isBlank()){
                                         //nombre , apellido e idc
-                                        li.addAll(ir.getLikeNomApeIdC(busNom,busApe,idObjetivo));
-
-                                        if (y==0 && w==0) {
+                                        li.addAll(ir.getLikeNomApeIdC(busNom,busApe,idObj));
+                                        
+                                        if (!busNom.isBlank()) {
+                                            if (valores[0]==0 && valores[1]==0 && idObj!=-1){
                                                 if(li.size()!=0){
                                                     out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
                                                     out.println("<div class='d_table'>"+new TableHtml().getTableInnerJM(li)+"</div>");
                                                 }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>No hubo coincidencias</h4></div>");}
-                                        }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Caracteres ingresados incorrectos</h4></div>");} 
+                                            }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Caracteres ingresados incorrectos</h4></div>");}
+                                        }else{
+                                            if (valores[1]==0 && idObj!=-1) {
+                                                if(li.size()!=0){
+                                                    out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
+                                                    out.println("<div class='d_table'>"+new TableHtml().getTableInnerJM(li)+"</div>");
+                                                }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>No hubo coincidencias</h4></div>");}
+                                            }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Caracteres ingresados incorrectos</h4></div>");} 
+                                        }
                                     }
                                     if(busNom.isEmpty()&&busApe.isEmpty()&&!busIdC.isBlank()){
                                         //idC
-                                        li.addAll(ir.getByIdCur(idObjetivo));
+                                        li.addAll(ir.getByIdCur(idObj));
 
-                                        if (w==0) {
+                                        if (idObj!=-1) {
                                             if (li.size()!=0) {
                                                 out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas (id)</h4></div>");
                                                 out.println("<div class='d_table'>"+new TableHtml().getTableInnerJM(li)+"</div>");
@@ -570,31 +488,13 @@
                                     }
                                 }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Algo ha salido mal con la busqueda de 'nombre,apellido e IdC'</h4></div>");}
                             }else if (busPro!=null&&busTitP!=null&&busAñoP!=null){
-
-                                Matcher mPro1= patAlf.matcher(busPro);
-                                Matcher mPro2= patCarac.matcher(busPro);
-                                if (!mPro1.matches()) {y1=1;
-                                }else{if (!mPro2.matches()) {y1=1;}}
-
-                                Matcher mTit1= patAlf.matcher(busTitP);
-                                Matcher mTit2= patCarac.matcher(busTitP);
-                                if (!mTit1.matches()) {y2=1;
-                                }else{if (!mTit2.matches()) {y2=1;}}
-
-                                Matcher mAño= patAño.matcher(busAñoP);
-                                if (mAño.matches()) {
-                                    añoInt = Integer.parseInt(busAñoP);
-                                }else{q=1;añoInt=0;}
-
-                                out.println("<div>pro= "+busPro+"</div>");
-                                out.println("<div>tit= "+busTitP+"</div>");
-                                out.println("<div>año= "+busAñoP+"</div>");
-
+                                valores= new RegExp().validateText(busPro,busTitP);
+                                año2= new RegExp().validateAño(busAñoP);
                                 if (!busPro.isBlank()&&busTitP.isEmpty()&&busAñoP.isEmpty()){
                                     //profesor
                                     li.addAll(ir.getLikeProTit(busPro,busTitP));
 
-                                    if (y==0) {
+                                    if (valores[0]==0) {
                                         if(li.size()!=0){
                                             out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
                                             out.println("<div class='d_table'>"+new TableHtml().getTableInnerJM(li)+"</div>");
@@ -605,7 +505,7 @@
                                     // profesor y titulo
                                     li.addAll(ir.getLikeProTit(busPro,busTitP));
 
-                                    if (y==0) {
+                                    if (valores[0]==0&&valores[1]==0) {
                                         if(li.size()!=0){
                                             out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
                                             out.println("<div class='d_table'>"+new TableHtml().getTableInnerJM(li)+"</div>");
@@ -614,16 +514,15 @@
                                 }
                                 if(!busPro.isBlank()&&!busTitP.isBlank()&&!busAñoP.isBlank()){
                                     //profesor, titulo y año
-                                    li.addAll(ir.getLikeProTitAño(busPro,busTitP,añoInt));
+                                    li.addAll(ir.getLikeProTitAño(busPro,busTitP,año2));
 
-                                    if (y==0 && q==0) {
+                                    if (valores[0]==0&&valores[1]==0 && año2!=-1) {
                                         if(li.size()!=0){
                                             out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
                                             out.println("<div class='d_table'>"+new TableHtml().getTableInnerJM(li)+"</div>");
                                         }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>No hubo coincidencias</h4></div>");}
                                     }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Caracteres ingresados incorrectos</h4></div>");}
                                 }
-
                                 if (busPro.isBlank()&&!busTitP.isBlank()&&busAñoP.isBlank()) {
                                     out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Error. Se requiere ingresar un 'nombre de profesor'</h4></div>");
                                 }
@@ -633,14 +532,9 @@
                             }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Algo ha salido mal en la busqueda de 'profesor, tiulo y año'</h4></div>");}
                         }else{
                             //IdR
-                            Matcher mId= patNum.matcher(busIdR);
-                            if (mId.matches()) {
-                                idObjetivo = Integer.parseInt(busIdR);
-                            }else{w=1;idObjetivo=0;}
-
-                            Inscripcion i1 = ir.getByIdReg(idObjetivo);
-
-                            if (w==0) {
+                            idObj= new RegExp().validateNumero(busIdR);
+                            Inscripcion i1 = ir.getByIdReg(idObj);
+                            if (idObj!=-1) {
                                 if (i1.getIdReg()!=0) {
                                     out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas (id)</h4></div>");
                                     out.println("<div class='d_table'>"+new TableHtml().getTable(i1)+"</div>");

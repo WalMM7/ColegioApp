@@ -11,7 +11,7 @@ public class Connector {
     private static String driver = "com.mysql.cj.jdbc.Driver";
        
     //Conexion localhost:
-    /*
+    
     private static String vendor = "mysql";
     private static String server = "localhost";
     private static String port = "3306";
@@ -19,8 +19,8 @@ public class Connector {
     private static String params = "?zeroDateTimeBehavior=CONVERT_TO_NULL";
     private static String user ="root";
     private static String password = "";
-    */
     
+    /*
     //Conexion remota: free MySQL
     private static String vendor = "mysql";
     private static String server = "sql10.freemysqlhosting.net";
@@ -29,7 +29,7 @@ public class Connector {
     private static String params = "?zeroDateTimeBehavior=CONVERT_TO_NULL";
     private static String user ="sql10529518";
     private static String password = "lEplZYfvGF";
-    
+    */
     // URL
     private static String url ="jdbc:"+vendor+"://"+server+":"+port+"/"+db+params;
     

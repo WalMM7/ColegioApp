@@ -4,6 +4,7 @@
     Author     : Walter
 --%>
 
+<%@page import="com.walcompany.Utils.RegExp"%>
 <%@page import="java.text.Normalizer"%>
 <%@page import="java.text.DecimalFormat"%>
 <%@page import="java.util.stream.Collectors"%>
@@ -27,35 +28,10 @@
 <%
     I_AlumnoRepository ar = new AlumnoRepository(Connector.getConexion());
     
-    int x=0, y=0, s=0, n=0, z=0, q=0, w=0,y1=0,y2, idObjetivo;
-    int edad2=0;
-    String nu="null", dni2="0";
-            
-    String[] msj={"","","","","","",""};
-    //msj[0]=nom,[1]=ape,[2]=edad,[3]=DNI,[4]=tel-cod.área,[5]=tel-número,[6]=texto-null.
-    String exRAlf = 
-        "^[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,15}$|"
-        + "^[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,15}(\\s)[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,15}$|"
-        + "^[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,15}(\\s)[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,15}(\\s)[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,15}$|"
-        +"^[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,13}(\\s)[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,13}(\\s)[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,13}(\\s)[a-­zA-­ZÀ-ÿ\u00F1\u00D1]{1,13}$";
-    Pattern patAlf = Pattern.compile(exRAlf); 
-    
-    String exRCarac="[^(àèìòù`~|}{\\[\\]^_¡¬)]*";
-    Pattern patCarac = Pattern.compile(exRCarac);
-    
-    String exRNum = "^[1-9]{1}\\d*$";
-    Pattern patNum = Pattern.compile(exRNum);
-        
-    String exRDni = "^[^0][0-9]{6,7}";
-    Pattern patDni = Pattern.compile(exRDni);
-    
-    String exRTelCa ="^0[1-9]{2,4}$";
-    Pattern patTelCa = Pattern.compile(exRTelCa);
-    String exRTelNt ="^15[1-9]{1}[0-9]{5,7}$|^[234567][0-9]{5,7}$";
-    Pattern patTelNt = Pattern.compile(exRTelNt);
-    
-    DecimalFormat miles = new DecimalFormat("###,###");
-  
+    int x=0, idObjetivo, edad2;
+    String dni2, telefono2;
+    List<String>msjss;
+   
 %>
 
 <!DOCTYPE html>
@@ -115,57 +91,32 @@
                                                                        
                     if (nombre!=null&&apellido!=null&&edad!=null&&dni!=null&&
                         codAre!=null&&numTel!=null) {
-                    
-                        String telefono="("+codAre+") - "+numTel;
-                    
-                        Matcher mEdad = patNum.matcher(edad);
-                        if (mEdad.matches()) {edad2 = Integer.parseInt(edad);}
-                 
-                        Matcher mDni = patDni.matcher(dni);
-                        if (mDni.matches()) {
-                            dni2 = miles.format(Integer.parseInt(dni));
-                        }else{w=1;dni2="0"; msj[3]="DNI";}
+                                            
+                        edad2= new RegExp().validateNumero(edad);
+                        dni2= new RegExp().validateDni(dni);
+                        telefono2=new RegExp().validateTelefono(codAre,numTel);
               
-                        Alumno alumno = new Alumno(nombre,apellido,edad2,dni2,telefono);
-                   
-                        for(Alumno a:ar.getAll()){if (alumno.getDni().equals(a.getDni())) {x=1;}}
-                     
-                        if (alumno.getEdad()<18||alumno.getEdad()>120) {z=1;msj[2]="Edad";}
-
-                        Matcher mNom1= patAlf.matcher(alumno.getNombre());
-                        Matcher mNom2= patCarac.matcher(alumno.getNombre());
-                        if (!mNom1.matches()) {y=1;msj[0]="Nombre";
-                        }else{if (!mNom2.matches()) {y=1;msj[0]="Nombre";}}
+                        Alumno alumno = new Alumno(nombre,apellido,edad2,dni2,telefono2);
                         
-                        Matcher mApe1= patAlf.matcher(alumno.getApellido());
-                        Matcher mApe2= patCarac.matcher(alumno.getApellido());
-                        if (!mApe1.matches()) {y=1;msj[1]="Apellido";
-                        }else{if (!mApe2.matches()) {y=1;msj[1]="Apellido";}}
-                  
-                        Matcher mTelCa = patTelCa.matcher(codAre);
-                        if (!mTelCa.matches()) {
-                            s=1;msj[4]="Tel-Cod.Área";}
-                        Matcher mTelNt = patTelNt.matcher(numTel);
-                        if (!mTelNt.matches()) {
-                            s=1;msj[5]="Tel-Número";}
-
-                        if (alumno.getNombre().equals(nu)||alumno.getApellido().equals(nu)||
-                            alumno.getDni().equals(nu)||alumno.getTelefono().equals(nu)) {
-                            n=1;msj[6]="Prohibido null";}
-
-                        if (x==0 && y==0 && z==0 && w==0 && s==0 && n==0) { ar.save(alumno);}
+                        msjss= new RegExp().validateAlumno(alumno);
+                        for(String ms:msjss){if (!ms.isEmpty()) {x=-1;}}
+                      
+                        //Guardar
+                        if (x==0) {ar.save(alumno);}
                         if (alumno.getIdalum()!=0) {
-                            out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Se ha GUARDADO el alumno id= "+alumno.getIdalum()+"</h4></div>");
-                        }else if(x==1){
-                            out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>Ya ha sido dado de alta el alumno. Revise DNI</h4></div>");
-                        }else if(y==1 ||z==1 ||w==1 ||s==1 || n==1){
-                            out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Campos completados incorrectamente</h4></div>");
-                            for (int j = 0; j < msj.length; j++) {
-                                if (!msj[j].isEmpty()) {out.println("<div class='d_subMsj'><p class='p_smsj'>"+msj[j]+"</p></div>");}
+                            out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Se ha GUARDADO EXITOSAMENTE el alumno con id= "+alumno.getIdalum()+"</h4></div>");
+                        }else if(x==-1){
+                            if (msjss.contains("Alumno existente en la base de datos")) {
+                                    out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>"+msjss.get(0)+"</h4></div>");
+                            }else{
+                                out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Campos completados incorrectamente</h4></div>");
+                                for (int j = 0; j < msjss.size(); j++) {
+                                    if (!msjss.get(j).isEmpty()) {out.println("<div class='d_subMsj'><p class='p_smsj'>"+msjss.get(j)+"</p></div>");}
+                                }
                             }
                         }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ocurrio un error en la BD</h4></div>");}
                     }else{out.println("<div class='d_msj' id='alerta_1'><span class='material-symbols-outlined' id='ic_completar'>edit_document</span><h4>Se requiere completar los campos para guardar un alumno</h4></div>");}
-                } catch (Exception e) {out.println("<div class='d_msj' id='error_2'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ocurrió un error inesperado</h4></div>");}
+                }catch (Exception e) {out.println("<div class='d_msj' id='error_2'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ocurrió un error inesperado</h4></div>");}
                 
             %>
             <form id="f_guardar">
@@ -227,63 +178,31 @@
                     
                     if (nombre!=null&&apellido!=null&&edad!=null&&dni!=null&&
                         codAre!=null&&numTel!=null&&idAl!=null) {
-                    
-                        String telefono="("+codAre+") - "+numTel;
-                       
-                        Matcher mIdAl= patNum.matcher(idAl);
-                        if (mIdAl.matches()) {
-                            idObjetivo = Integer.parseInt(idAl);
-                        }else{q=1;idObjetivo=0;}
-                     
-                        Matcher mEdad = patNum.matcher(edad);
-                        if (mEdad.matches()) {edad2 = Integer.parseInt(edad);}
-               
-                        Matcher mDni = patDni.matcher(dni);
-                        if (mDni.matches()) {
-                            dni2 = miles.format(Integer.parseInt(dni));
-                        }else{w=1;dni2="0"; msj[3]="DNI";}
-                  
-                        Alumno alumno = new Alumno(idObjetivo,nombre,apellido,edad2,dni2,telefono);
-              
-                        for(Alumno a:ar.getAll()){
-                            if (alumno.getIdalum()!=a.getIdalum()){
-                                if (alumno.getDni().equals(a.getDni())) {x=1;}}
-                        }
-                  
-                        if (alumno.getEdad()<18||alumno.getEdad()>120) {z=1;msj[2]="Edad";}
-         
-                        Matcher mNom1= patAlf.matcher(alumno.getNombre());
-                        Matcher mNom2= patCarac.matcher(alumno.getNombre());
-                        if (!mNom1.matches()) {y=1;msj[0]="Nombre";
-                        }else{if (!mNom2.matches()) {y=1;msj[0]="Nombre";}}
-                        
-                        Matcher mApe1= patAlf.matcher(alumno.getApellido());
-                        Matcher mApe2= patCarac.matcher(alumno.getApellido());
-                        if (!mApe1.matches()) {y=1;msj[1]="Apellido";
-                        }else{if (!mApe2.matches()) {y=1;msj[1]="Apellido";}}
-            
-                        Matcher mTelCa = patTelCa.matcher(codAre);
-                        if (!mTelCa.matches()) {
-                            s=1;msj[4]="Tel-Cod.Área";}
-                        Matcher mTelNt = patTelNt.matcher(numTel);
-                        if (!mTelNt.matches()) {
-                            s=1;msj[5]="Tel-Número";}
+                 
+                        idObjetivo= new RegExp().validateNumero(idAl);
+                        edad2= new RegExp().validateNumero(edad);
+                        dni2= new RegExp().validateDni(dni);
+                        telefono2=new RegExp().validateTelefono(codAre,numTel);
 
-                        if (alumno.getNombre().equals(nu)||alumno.getApellido().equals(nu)||
-                            alumno.getDni().equals(nu)||alumno.getTelefono().equals(nu)) {
-                            n=1;msj[6]="Prohibido null";}
-               
-                        if (x==0 &&y==0 &&z==0 &&w==0 &&s==0 &&q==0 &&n==0) {
+                        Alumno alumno = new Alumno(idObjetivo,nombre,apellido,edad2,dni2,telefono2);
+
+                        msjss= new RegExp().validateAlumno(alumno);
+                        for(String ms:msjss){if (!ms.isEmpty()) {x=-1;}}
+                    
+                        //Actualizar
+                        if (x==0) {
                             ar.update(alumno);
                             out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Se ha ACTUALIZADO el alumno con id= "+alumno.getIdalum()+"</h4></div>");
-                        }else if(x==1){
-                            out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>Alumno existente en la base de datos</h4></div>");
-                        }else if(y==1 ||z==1 ||w==1 ||s==1 ||q==1 ||n==1){
-                            out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Campos completados incorrectamente</h4></div>");
-                            for (int j = 0; j < msj.length; j++) {
-                                if (!msj[j].isEmpty()) {out.println("<div class='d_subMsj'><p class='p_smsj'>"+msj[j]+"</p></div>");}
+                        }else if(x==-1){
+                            if (msjss.contains("Alumno existente en la base de datos")) {
+                                out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>"+msjss.get(0)+"</h4></div>");
+                            }else{
+                                out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Campos completados incorrectamente</h4></div>");
+                                for (int j = 0; j < msjss.size(); j++) {
+                                    if (!msjss.get(j).isEmpty()) {out.println("<div class='d_subMsj'><p class='p_smsj'>"+msjss.get(j)+"</p></div>");}
+                                }
                             }
-                        }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ocurrio un error</h4></div>");}
+                        }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ocurrio un error en la Base de Datos</h4></div>");}
                     }else{out.println("<div class='d_msj' id='alerta_1'><span class='material-symbols-outlined' id='ic_completar'>edit_document</span><h4>Se requiere completar los campos para actualizar un alumno</h4></div>");}
                 } catch (Exception e) {out.println("<div class='d_msj' id='error_2'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ocurrió un error inesperado</h4></div>");}
             %>
@@ -349,22 +268,15 @@
                     String elimAl = request.getParameter("elimAlumno");
                     
                     if (elimAl!=null) {
-                        Matcher mEAl= patNum.matcher(elimAl);
-                        if (mEAl.matches()) {
-                            idObjetivo = Integer.parseInt(elimAl);
-                        }else{z=1;idObjetivo=0;}
-                                          
+                        idObjetivo= new RegExp().validateNumero(elimAl);
                         Alumno a1 = ar.getById(idObjetivo);
-
-                        if (a1.getIdalum()!=0) {
-                            ar.remove(a1);
-                            out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Se ha ELIMINADO el alumno con id= "+elimAl+"</h4></div>");
-                        }else if(elimAl.equals("0")){
-                            out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>No es valido el id alumno = 0</h4></div>");
-                        }else if(z==1){
-                            out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ingrese caracteres numéricos</h4></div>");
-                        }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>No existe en la BD el alumno con id = "+idObjetivo+"</h4></div>");}
-                    }else{out.println("<div class='d_msj' id='alerta_1'><span class='material-symbols-outlined' id='ic_completar'>edit_document</span><h4>Se requiere asignar un alumno para su eliminación</h4></div>");}
+                        if (idObjetivo!=-1) {
+                            if (a1.getIdalum()!=0) {
+                                ar.remove(a1);
+                                out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Se ha ELIMINADO el alumno con id= "+a1.getIdalum()+"</h4></div>");
+                            }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>No existe en la BD el alumno con id = "+elimAl+"</h4></div>");}
+                        }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ingrese solamente caracteres numéricos y mayores a '0'</h4></div>");}
+                    }else{out.println("<div class='d_msj' id='alerta_1'><span class='material-symbols-outlined' id='ic_completar'>edit_document</span><h4>Se requiere asignar un curso para su eliminación</h4></div>");}
                 } catch (Exception e) {out.println("<div class='d_msj' id='error_2'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ocurrió un error inesperado</h4></div>");}
             %>
             
@@ -454,20 +366,12 @@
                                         out.println("<div class='d_msj' id='alerta_1'><span class='material-symbols-outlined' id='ic_completar'>edit_document</span><h4>Se requiere completar cuaquiera de los campos para hacer una busqueda</h4></div>");
                                         out.println("<div class='d_table'>"+new TableHtml().getTable(ar.getAll())+"</div>");
                                 }else if(busNom!=null&&busApe!=null){
-                                    
-                                    Matcher mNom1= patAlf.matcher(busNom);
-                                    Matcher mNom2= patCarac.matcher(busNom);
-                                    if (!mNom1.matches()) {y1=1;
-                                    }else{if (!mNom2.matches()) {y1=1;}}
-
-                                    Matcher mApe1= patAlf.matcher(busApe);
-                                    Matcher mApe2= patCarac.matcher(busApe);
-                                    if (!mApe1.matches()) {y2=1;
-                                    }else{if (!mApe2.matches()) {y2=1;}}
+                                    int[] valores={0,0};
+                                    valores = new RegExp().validateText(busNom,busApe);
                                     
                                     if(!busNom.isBlank()&& busApe.isEmpty()){
                                         //Nombre
-                                        if (y==0) {
+                                        if (valores[0]==0) {
                                             if(li.size()!=0){
                                                 out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
                                                 out.println("<div class='d_table'>"+new TableHtml().getTable(li)+"</div>");
@@ -476,7 +380,7 @@
                                     }
                                     if (!busApe.isBlank()&& busNom.isEmpty()){
                                         //Apellido
-                                        if (y==0) {
+                                        if (valores[1]==0) {
                                             if(li.size()!=0){
                                                     out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
                                                     out.println("<div class='d_table'>"+new TableHtml().getTable(li)+"</div>");
@@ -485,7 +389,7 @@
                                     }
                                     if(!busNom.isBlank() && !busApe.isBlank()){
                                         //Nombre y apellido
-                                        if (y==0) {
+                                        if (valores[0]==0 && valores[1]==0) {
                                             if(li.size()!=0){
                                                 out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
                                                 out.println("<div class='d_table'>"+new TableHtml().getTable(li)+"</div>");
@@ -494,30 +398,24 @@
                                     }
                                 }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>Se produjo un ERROR en los campos 'nombre y apellido'</h4></div>");}
                             }else{
-                                    //idDni
-                                    Matcher mDni= patDni.matcher(busDni);
-                                    if (!mDni.matches()) {z=1;}    
-                                    Alumno a1 = (ar.getByDni(busDni));
-                                    if (z==0) {
-                                        if (a1.getIdalum()!=0) {
-                                            out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
-                                            out.println("<div class='d_table'>"+new TableHtml().getTable(a1)+"</div>");
-                                        }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>No existe el alumno</h4></div>");}
-                                    }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ingrese solamente caracteres numéricos y mayores a cero</h4></div>");}
-                            }
-                        }else{  
-                                //idA
-                                Matcher mIdAl= patNum.matcher(busIdA);
-                                if (mIdAl.matches()) {
-                                    idObjetivo = Integer.parseInt(busIdA);
-                                }else{q=1;idObjetivo=0;}
-                                Alumno a1 = ar.getById(idObjetivo);
-                                if (z==0) {
+                                dni2= new RegExp().validateDni(busDni);
+                                Alumno a1 = (ar.getByDni(busDni));
+                                if (!dni2.equals("-1")) {
                                     if (a1.getIdalum()!=0) {
                                         out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
                                         out.println("<div class='d_table'>"+new TableHtml().getTable(a1)+"</div>");
                                     }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>No existe el alumno</h4></div>");}
-                                }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ingrese solamente caracteres numéricos y mayores a cero</h4></div>");}
+                                }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ingrese caracteres numéricos (8 dígitos) y mayores a '0'</h4></div>");}
+                            }
+                        }else{  
+                            idObjetivo=new RegExp().validateNumero(busIdA);
+                            Alumno a1 = ar.getById(idObjetivo);
+                            if (idObjetivo!=-1) {
+                                if (a1.getIdalum()!=0) {
+                                    out.println("<div class='d_msj' id='exitoso'><span class='material-symbols-outlined' id='ic_ok'>check_circle</span><h4>Coincidencias encontradas</h4></div>");
+                                    out.println("<div class='d_table'>"+new TableHtml().getTable(a1)+"</div>");
+                                }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_cancel'>cancel</span><h4>No existe el alumno</h4></div>");}
+                            }else{out.println("<div class='d_msj' id='error_1'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ingrese solamente caracteres numéricos y mayores a '0'</h4></div>");}
                         }    
                     }else{out.println("<div class='d_msj' id='alerta_1'><h4 style='font-weight:800;'>No hay registros de alumnos</h4></div>");}         
                 }catch(Exception e){out.println("<div class='d_msj' id='error_2'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ocurrió un error inesperado</h4></div>");}         
