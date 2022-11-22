@@ -286,47 +286,5 @@ public class RegExp {
         
         return msj;    
     }
-       
-    //Matcher mDni = patDni.matcher(dni);
-    //if (mDni.matches()) {
-    //    dni2 = miles.format(Integer.parseInt(dni));
-    //}else{w=1;dni2="0"; msj[3]="DNI";}
     
-    /*
-    public String[] msjTitPro(int[] valores){
-        String msjs[]={"",""};
-        for (int i=0; i<valores.length; i++) {
-            if (valores[i]==1) {
-                if (i==0) {msjs[i]="Titulo";}
-                if (i==1) {msjs[i]="Profesor";}
-            }
-        }
-        return msjs;  
-    }
-    
-    public int[] validarCurso(String titulo,String profesor,String dia,
-        String turno,String inicio,String fin){
-        
-        int[] valores={0,0,0,0,0,0};
-        for(Dia d:Dia.values()){dias.add(d.toString());}
-        for(Turno t:Turno.values()){turnos.add(t.toString());}
-        String[]campos={titulo,profesor,dia,turno,inicio,fin};
-        for (int i=0; i<campos.length; i++) {
-            if (i<=1) {
-                Matcher m1= patAlf.matcher(campos[i]);
-                Matcher m2= patCarac.matcher(campos[i]);
-                if (!m1.matches()){valores[i]=1;
-                }else{if (!m2.matches()) {valores[i]=1;}}
-            }
-            if (i==2) {if (!dias.contains(campos[i])) {valores[i]=1;}}
-            if (i==3) {if (!turnos.contains(campos[i])) {valores[i]=1;}}
-            if (i>3&i<=campos.length-1) {
-                Matcher m3= patHor.matcher(campos[i]);
-                if (!m3.matches()) {valores[i]=1;}
-            }
-        }
-        return valores;
-    }*/
-    
-
 }
