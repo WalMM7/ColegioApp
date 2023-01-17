@@ -66,6 +66,14 @@ public interface I_CursoRepository {
             if (li.size()!=0){return li; 
             }else{ return new ArrayList();}
         }
-    }  
+    }
+    
+    default public List<String> getAllString(){
+        List<String> list = new ArrayList();
+        for (Curso c:getAll()) {
+            list.add(c.toStringFile());
+        }
+        return list;
+    }
        
 }

@@ -49,6 +49,11 @@ public class Curso {
                 +profesor+", dia="+dia+", turno="+turno+", inicio="
                 +inicio+", fin="+fin+'}';
     }
+    
+    public String toStringFile(){
+        return idcurso+"-"+titulo+"-"+profesor+"-"+dia+"-"+turno+"-"
+                +inicio+"-"+fin;
+    }
   
     public Turno getTurno() {
         return turno;
