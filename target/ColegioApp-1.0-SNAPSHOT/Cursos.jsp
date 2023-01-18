@@ -424,6 +424,9 @@
                     }else{out.println("<div class='d_msj' id='alerta_1'><h4 style='font-weight:800;'>No hay registros de cursos</h4></div>");}
                 } catch (Exception e) {out.println("<div class='d_msj' id='error_2'><span class='material-symbols-outlined' id='ic_aviso'>error</span><h4>Ocurrió un error inesperado</h4></div>");}
             %>
+            <form action="Archivos.jsp" id="foot_vol_final">
+                <input type="submit" id="b_archivo" class="d_vol" value="Crear ARCHIVO"/>
+            </form>
             <footer id="foot_vol_final">
                 <div class="d_vol" >
                     <a href="#a_volver" id="a_volIc"><span class="material-symbols-outlined" id="ic_volver">arrow_upward</span></a>

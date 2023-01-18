@@ -1,0 +1,24 @@
+LISTA DE CURSOS:
+**********************************************
+1-Biologia General-Adela Rodriguez-Jueves-Mañana-08:00-12:30
+2-Musica Clasica-Alberto Beligoy-Miercoles-Mañana-10:30-12:00
+3-Ciencias Sociales-Ernesto Perez-Viernes-Tarde-14:30-16:30
+4-Matematica-Luisa Sanchez-Jueves-Tarde-14:00-15:30
+5-Filosofia-Fermin Quinteros-Lunes-Tarde-15:00-17:00
+6-Computacion-Mario Saez-Jueves-Mañana-11:30-13:00
+8-Gimnasia Ritmica-Lucas Pussineri-LuMi-Mañana-09:00-10:00
+12-Pensamiento Sistemico-Ramon Valdes-Martes-Mañana-09:30-11:30
+14-Mitologia Griega-Cornelio Savedra-Sabado-Mañana-09:00-11:00
+16-Logistica-Mauro Palacios-Lunes-Mañana-08:00-10:00
+17-Economia General-Dario Ludueña-MaJu-Mañana-09:00-12:00
+18-Informatica-Eduardo Perez-Lunes-Noche-21:30-22:59
+31-Paleontologia-Robert Grantt-Viernes-Mañana-10:00-12:00
+33-Mecanica De Fluidos-Javier Sanchez-MaJu-Mañana-08:00-09:30
+36-Computacion-Lucas Avellaneda-Viernes-Mañana-09:00-12:00
+37-Educacion Civica-Eleonora Garrido-LuMi-Mañana-10:00-12:00
+39-Biologia Molecular-Carlos Gutierrez-Miercoles-Tarde-15:00-16:30
+40-Biologia Molecular-Javier Seeno-Lunes-Mañana-10:00-11:30
+41-Html Basico-Jorge Perez-Miercoles-Mañana-09:00-11:00
+42-Php Intermedio-Jorge Almiron-LuMi-Noche-19:00-21:00
+44-Cocina Caribena-Adela Perez-Sabado-Tarde-14:00-17:00
+**********************************************
